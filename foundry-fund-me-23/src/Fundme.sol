@@ -13,7 +13,7 @@ contract FundMe {
     address[] private s_funders;
 
     // Could we make this constant?  /* hint: no! We should make it immutable! */
-    address public /* immutable */ i_owner;
+    address private immutable i_owner;
     uint256 public constant MINIMUM_USD = 5 * 10 ** 18;
     AggregatorV3Interface private s_priceFeed;
 
@@ -38,9 +38,20 @@ contract FundMe {
         if (msg.sender != i_owner) revert FundMe__NotOwner();
         _;
     }
+
+    function cheaperWithdraw() public onlyOwner {
+        uint256 fundersLength = s_funders.length;
+        for (uint256 funderIndex = 0; funderIndex < fundersLength; funderIndex++) {
+            address funder = s_funders[funderIndex];
+            s_addressToAmountFunded[funder] = 0;
+        }
+        s_funders = new address[](0);
+        (bool callSuccess, ) = payable(msg.sender).call{value: address(this).balance}("");
+        require(callSuccess, "Call failed");
+    }
     
     function withdraw() public onlyOwner {
-        for (uint256 funderIndex=0; funderIndex < s_funders.length; funderIndex++){
+        for (uint256 funderIndex = 0; funderIndex < s_funders.length; funderIndex++){
             address funder = s_funders[funderIndex];
             s_addressToAmountFunded[funder] = 0;
         }
@@ -84,6 +95,11 @@ contract FundMe {
    function getFunders(uint256 index) external view returns (address) {
         return s_funders[index];
    }
+
+    function getOwner() external view returns(address) {
+        return i_owner;
+    }
+
 }
 
 // private functions are gas efficient
