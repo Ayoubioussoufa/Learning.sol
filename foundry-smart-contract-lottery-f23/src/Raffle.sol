@@ -66,6 +66,7 @@ contract Raffle is VRFConsumerBaseV2 {
     /*Events: */
     event enteredRaffle(address indexed player);
     event winnerPicked(address indexed winner);
+    event forRequestId(uint256 indexed requestId);
 
     constructor(uint256 entranceFee,
         uint256 interval,
@@ -124,13 +125,14 @@ contract Raffle is VRFConsumerBaseV2 {
         // 1. Request the RNG
         // 2. Get the random number
         s_raffleState = RaffleState.CALCULATING;
-        /*uint256 requestId =*/ i_coordinator.requestRandomWords(
+        uint256 requestId = i_coordinator.requestRandomWords(
             i_gasLane, //gas lane
             i_subscriptionId, // id that you have funded with link
             REQUEST_CONFIRMATIONS,
             i_callbackGasLimit,
             NUMWORDS // number of number words
         );
+        emit forRequestId(requestId);
     }
     // CEI : CHECKS, EFFECTS, INTERACTIONS
     function fulfillRandomWords(
@@ -158,11 +160,20 @@ contract Raffle is VRFConsumerBaseV2 {
     function getRaffleState() external view returns(RaffleState) {
         return s_raffleState;
     }
+
     function getPlayer(uint256 indexOfPlayer) external view returns(address){
         return s_players[indexOfPlayer];
     }
 
     function getrecentWinner() external view returns(address) {
         return recentWinner;
+    }
+
+    function getPlayersLength() external view returns(uint256){
+        return s_players.length;
+    }
+
+    function getLastTimeStamp() external view returns (uint256) {
+        return s_lastTimeStamp;
     }
 }
