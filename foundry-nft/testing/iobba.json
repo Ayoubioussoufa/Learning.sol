@@ -1,0 +1,11 @@
+{
+    "name": "iobba",
+    "description": "An adorable PUG pup!",
+    "image": "ipfs://QmfCeAdUNJEYNLpVjBruv5KDUuc1SrqnFcW9k5cqcZ17qf?filename=iobba.jpeg",
+    "attributes": [
+        {
+            "trait_type": "cuteness",
+            "value": 100
+        }
+    ]
+}
