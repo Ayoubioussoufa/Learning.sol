@@ -2,6 +2,8 @@
 
 pragma solidity 0.8.20;
 
+// unit = not using the deployer contract
+
 import {Test, console} from "../../lib/forge-std/src/Test.sol";
 import {MoodNft} from "../../src/MoodNft.sol";
 import {DeployMoodNft} from "../../script/DeployMoodNft.s.sol";
