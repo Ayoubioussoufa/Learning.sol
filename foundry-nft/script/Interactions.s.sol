@@ -28,10 +28,10 @@ contract MintBasicNft is Script {
 contract MintMoodNft is Script {
     function run() external {
         address mostRecentDeployed = DevOpsTools.get_most_recent_deployment("MoodNft", block.chainid);
-        mintNft(mostRecentDeployed);
+        mintOnNft(mostRecentDeployed);
     }
 
-    function mintNft(address contractAddress) public {
+    function mintOnNft(address contractAddress) public {
         vm.startBroadcast();
         MoodNft(contractAddress).mintNft();
         vm.stopBroadcast();
